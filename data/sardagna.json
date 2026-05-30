@@ -62,7 +62,8 @@
     {"id": "P416", "surname": "DEGASPERI", "givenNames": "Giuseppe Andrea", "birthYear": 1868, "birthPlace": null, "deathYear": null, "spouse": null, "emigration": {"destination": "USA", "year": null}, "notes": "padre: Giuseppe"},
     {"id": "P422", "surname": "DEPEDRI", "givenNames": "Costante", "birthYear": 1884, "birthPlace": null, "deathYear": null, "spouse": null, "emigration": {"destination": "USA", "year": null}, "notes": "madre: Cadonna Rosa"},
     {"id": "P423", "surname": "GARDUM", "givenNames": "Albino Angelo", "birthYear": 1869, "birthPlace": null, "deathYear": null, "spouse": null, "emigration": {"destination": "USA", "year": null}, "notes": "padre: Vigilio · madre: Degasperi Giuditta"},
-    {"id": "P425", "surname": "BONTEMPELLI", "givenNames": "Vigilio Francesco", "birthYear": 1845, "birthPlace": null, "deathYear": null, "spouse": null, "emigration": {"destination": "USA", "year": null}, "notes": "madre: Pedri Maria"}
+    {"id": "P425", "surname": "BONTEMPELLI", "givenNames": "Vigilio Francesco", "birthYear": 1845, "birthPlace": null, "deathYear": null, "spouse": null, "emigration": {"destination": "USA", "year": null}, "notes": "madre: Pedri Maria"},
+    {"id": "P426", "surname": "DEGASPERI", "givenNames": "Giuseppe Vincenzo", "birthYear": 1865, "birthPlace": "Vela", "deathYear": 1923, "spouse": "Luigia Demozzi", "emigration": {"destination": "USA", "year": 1906}, "notes": null}
   ],
   "relationships": [
     {"from": "P001", "to": "P003", "type": "filial", "sources": [{"type": "parrocchiale", "reference": "Battesimi Sardagna 1795", "description": "Dominicus, figlio di Giacomo"}]},
