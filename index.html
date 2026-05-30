@@ -3,185 +3,323 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rete genealogica di Sardagna — diaspora trentina verso gli USA</title>
-<meta name="description" content="Archivio visuale delle famiglie Demozzi, Degasperi e Berloffa di Sardagna (Trentino) e la loro emigrazione verso gli Stati Uniti tra il 1860 e il 1920. Dati verificati con fonti documentali.">
+<title>Rete genealogica · Sardagna</title>
+<meta name="description" content="Archivio visuale delle famiglie Demozzi, Degasperi e Berloffa di Sardagna (Trentino) e la loro emigrazione verso gli Stati Uniti tra il 1860 e il 1920.">
 <meta property="og:title" content="Rete genealogica di Sardagna">
-<meta property="og:description" content="Archivio interattivo delle famiglie Demozzi, Degasperi, Berloffa — e l'emigrazione verso gli Stati Uniti.">
+<meta property="og:description" content="Archivio interattivo · Demozzi, Degasperi, Berloffa · emigrazione verso gli USA">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ── tokens ── */
 :root{
-  --ink:#100d09; --ink2:#1c1812; --paper:#efe7d6;
-  --gold:#e6b450; --line:rgba(231,214,180,.14);
-  --ui-bg:rgba(22,18,13,.72); --ui-br:rgba(231,214,180,.16);
+  --paper:#efe7d6; --gold:#e6b450; --gold2:rgba(230,180,80,.18);
+  --ui-bg:rgba(18,14,9,.78); --ui-br:rgba(231,214,180,.13);
+  --ui-br-h:rgba(231,214,180,.32); --text:#d4c9b3; --text-dim:#7d7259;
+  --r8:8px; --r20:20px; --r999:999px;
+  --trans:.18s ease;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:#0b0805}
+html,body{background:#090603;font-family:'Archivo',system-ui,sans-serif}
+
+/* ── wrap ── */
 #wrap{
-  position:relative;width:100%;max-width:1000px;margin:0 auto;
-  border-radius:16px;overflow:hidden;
-  background:radial-gradient(120% 120% at 30% 15%,#241e16 0%,#15110c 55%,#0b0805 100%);
-  box-shadow:0 30px 70px -30px rgba(0,0,0,.8),inset 0 0 0 1px rgba(231,214,180,.07);
-  font-family:'Archivo',system-ui,sans-serif;
+  position:relative;width:100%;max-width:1020px;margin:0 auto;
+  border-radius:20px;overflow:hidden;
+  background:radial-gradient(130% 130% at 28% 12%,#252019 0%,#14100b 52%,#090603 100%);
+  box-shadow:0 32px 80px -28px rgba(0,0,0,.85),
+             inset 0 0 0 1px rgba(231,214,180,.06),
+             inset 0 1px 0 rgba(255,245,220,.06);
 }
+
+/* ── canvas ── */
 #cv{display:block;width:100%;height:640px;cursor:grab;touch-action:none}
 #cv.dg{cursor:grabbing}
 
-#a11y-layer{
-  position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2;
-}
-.a11y-node{
-  position:absolute;width:1px;height:1px;overflow:hidden;
-  clip:rect(0,0,0,0);white-space:nowrap;pointer-events:none;
+/* ── accessibility overlay ── */
+#a11y-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2}
+.a11y-node{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;pointer-events:none}
+
+/* ── top bar ── */
+#topbar{
+  position:absolute;top:0;left:0;right:0;z-index:6;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:16px 18px 0;gap:12px;pointer-events:none;
 }
 
-#hdr{position:absolute;top:18px;left:22px;pointer-events:none;z-index:3}
+/* header */
+#hdr{pointer-events:none;flex:0 0 auto;max-width:260px}
 #hdr h1{
-  font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:21px;
-  color:var(--paper);letter-spacing:.2px;line-height:1;
-  text-shadow:0 2px 10px rgba(0,0,0,.6);
+  font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:20px;
+  color:var(--paper);letter-spacing:.15px;line-height:1.1;
+  text-shadow:0 2px 12px rgba(0,0,0,.7);
 }
 #hdr p{
-  font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:400;
-  font-size:12.5px;color:#b9ad96;margin-top:5px;letter-spacing:.2px;
+  font-family:'Fraunces',serif;font-style:italic;font-weight:300;
+  font-size:12px;color:#a89d85;margin-top:4px;letter-spacing:.15px;
 }
 
+/* search */
 #search-wrap{
-  position:absolute;top:56px;left:22px;
-  z-index:4;width:200px;
+  flex:0 0 auto;width:190px;position:relative;pointer-events:all;
+  margin-top:2px;
 }
 #search{
   width:100%;font-family:'Archivo',sans-serif;font-size:12px;
-  padding:6px 32px 6px 12px;border-radius:999px;
+  padding:7px 30px 7px 13px;border-radius:var(--r999);
   border:1px solid var(--ui-br);background:var(--ui-bg);
-  color:#d9cfba;outline:none;backdrop-filter:blur(8px);
-  transition:border-color .18s;
+  color:var(--text);outline:none;backdrop-filter:blur(10px);
+  transition:border-color var(--trans);
 }
-#search:focus{border-color:rgba(231,214,180,.4);color:#f3ead7;}
-#search::placeholder{color:#6d6350;}
+#search:focus{border-color:var(--ui-br-h);color:var(--paper)}
+#search::placeholder{color:#5a5040}
 #search-clear{
-  position:absolute;right:10px;top:50%;transform:translateY(-50%);
-  background:none;border:none;color:#6d6350;cursor:pointer;font-size:15px;
-  line-height:1;padding:0;display:none;transition:color .15s;
+  position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:#5a5040;cursor:pointer;
+  font-size:14px;padding:0;display:none;transition:color var(--trans);
 }
-#search-clear:hover{color:#d9cfba;}
+#search-clear:hover{color:var(--text)}
 #search-results{
-  position:absolute;top:calc(100% + 5px);left:0;right:0;
-  background:rgba(22,18,13,.96);border:1px solid var(--ui-br);
-  border-radius:10px;overflow:hidden;display:none;
-  box-shadow:0 8px 24px rgba(0,0,0,.5);max-height:200px;overflow-y:auto;
+  position:absolute;top:calc(100% + 6px);left:0;right:0;
+  background:rgba(18,14,9,.97);border:1px solid var(--ui-br);
+  border-radius:12px;overflow:hidden;display:none;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);max-height:210px;overflow-y:auto;
 }
 .sr-item{
-  padding:7px 13px;font-size:12px;color:#d9cfba;cursor:pointer;
-  transition:background .12s;display:flex;justify-content:space-between;
-  align-items:center;gap:8px;
+  padding:8px 13px;font-size:12px;color:var(--text);cursor:pointer;
+  transition:background .1s;display:flex;align-items:center;gap:8px;
 }
-.sr-item:hover{background:rgba(231,214,180,.08);}
-.sr-name{font-weight:500;}
-.sr-yr{color:#6d6350;font-size:10.5px;}
-.sr-fam{font-size:10px;padding:1px 7px;border-radius:999px;flex:0 0 auto;}
+.sr-item:hover{background:rgba(231,214,180,.07)}
+.sr-name{font-weight:500;flex:1}
+.sr-tag{font-size:10px;padding:1px 8px;border-radius:var(--r999);flex:0 0 auto}
+.sr-yr{color:var(--text-dim);font-size:10.5px;flex:0 0 auto}
 
-#controls{position:absolute;top:18px;right:18px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:62%;z-index:4}
+/* controls */
+#controls{
+  flex:1 1 auto;display:flex;gap:5px;flex-wrap:wrap;
+  justify-content:flex-end;pointer-events:all;
+  max-width:560px;margin-top:2px;
+}
 .cbtn{
-  font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:500;letter-spacing:.2px;
-  padding:6px 12px;border-radius:999px;border:1px solid var(--ui-br);
-  background:var(--ui-bg);color:#d9cfba;cursor:pointer;
-  backdrop-filter:blur(8px);transition:all .18s ease;white-space:nowrap;
+  font-family:'Archivo',sans-serif;font-size:11px;font-weight:500;
+  letter-spacing:.25px;padding:6px 13px;border-radius:var(--r999);
+  border:1px solid var(--ui-br);background:var(--ui-bg);
+  color:var(--text);cursor:pointer;backdrop-filter:blur(10px);
+  transition:all var(--trans);white-space:nowrap;
 }
-.cbtn:hover{background:rgba(40,33,24,.85);color:#f3ead7;border-color:rgba(231,214,180,.3)}
-.cbtn.act{background:linear-gradient(180deg,rgba(230,180,80,.34),rgba(230,180,80,.2));border-color:rgba(230,180,80,.6);color:#ffe6a8;box-shadow:0 3px 14px -4px rgba(230,180,80,.5)}
+.cbtn:hover{background:rgba(36,29,20,.9);color:var(--paper);border-color:var(--ui-br-h)}
+.cbtn.act{
+  background:linear-gradient(160deg,rgba(230,180,80,.3),rgba(230,180,80,.14));
+  border-color:rgba(230,180,80,.55);color:#fde9a8;
+  box-shadow:0 2px 12px -4px rgba(230,180,80,.45);
+}
+/* separatore visivo prima del bottone aggiungi */
+.cbtn-sep{width:1px;height:20px;background:var(--ui-br);align-self:center;flex:0 0 auto}
+/* bottone aggiungi */
+.cbtn-add{
+  background:linear-gradient(160deg,rgba(230,180,80,.22),rgba(230,180,80,.1));
+  border-color:rgba(230,180,80,.4);color:#f0d88a;
+}
+.cbtn-add:hover{
+  background:linear-gradient(160deg,rgba(230,180,80,.38),rgba(230,180,80,.2));
+  border-color:rgba(230,180,80,.7);color:#fde9a8;
+  box-shadow:0 2px 16px -4px rgba(230,180,80,.5);
+}
 
+/* zoom */
 #zoomctl{position:absolute;bottom:16px;left:16px;display:flex;flex-direction:column;gap:5px;z-index:4}
 .zbtn{
-  width:30px;height:30px;border-radius:8px;border:1px solid var(--ui-br);
-  background:var(--ui-bg);color:#d9cfba;cursor:pointer;font-size:16px;line-height:1;
-  backdrop-filter:blur(8px);transition:all .15s ease;font-family:'Archivo',sans-serif;
+  width:30px;height:30px;border-radius:var(--r8);border:1px solid var(--ui-br);
+  background:var(--ui-bg);color:var(--text);cursor:pointer;font-size:16px;line-height:1;
+  backdrop-filter:blur(10px);transition:all .15s;font-family:'Archivo',sans-serif;
 }
-.zbtn:hover{background:rgba(40,33,24,.85);color:#f3ead7}
+.zbtn:hover{background:rgba(36,29,20,.9);color:var(--paper)}
 
+/* status bar */
+#sbar{
+  position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
+  font-size:10.5px;color:var(--text-dim);letter-spacing:.5px;
+  pointer-events:none;z-index:3;white-space:nowrap;
+  background:rgba(12,9,5,.7);backdrop-filter:blur(6px);
+  padding:3px 12px;border-radius:var(--r999);
+  border:1px solid var(--ui-br);
+}
+
+/* legend */
 #legend{
   position:absolute;bottom:16px;right:16px;z-index:3;pointer-events:none;
-  background:var(--ui-bg);border:1px solid var(--ui-br);border-radius:12px;
-  padding:11px 13px;backdrop-filter:blur(8px);max-width:230px;
+  background:var(--ui-bg);border:1px solid var(--ui-br);border-radius:14px;
+  padding:12px 14px;backdrop-filter:blur(10px);max-width:200px;
 }
-#legend .lt{font-family:'Fraunces',serif;font-size:11px;font-weight:600;color:#cdbfa2;text-transform:uppercase;letter-spacing:1.4px;margin-bottom:7px}
-.lrow{display:flex;align-items:center;gap:7px;font-size:11px;color:#c9bfa9;margin:3px 0;line-height:1.3}
-.ldot{width:11px;height:11px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 0 1px rgba(0,0,0,.3),inset 1px 1px 1px rgba(255,255,255,.4)}
+#legend .lt{
+  font-family:'Fraunces',serif;font-size:10px;font-weight:600;
+  color:#b8a98c;text-transform:uppercase;letter-spacing:1.6px;margin-bottom:7px;
+}
+.lrow{display:flex;align-items:center;gap:7px;font-size:11px;color:#b8ae9a;margin:3px 0;line-height:1.3}
+.ldot{width:10px;height:10px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 0 1px rgba(0,0,0,.3)}
 .lln{width:18px;height:0;flex:0 0 auto}
-#legend .sub{margin-top:9px;padding-top:8px;border-top:1px solid rgba(231,214,180,.1)}
+#legend .sub{margin-top:9px;padding-top:8px;border-top:1px solid rgba(231,214,180,.08)}
 
+/* info panel */
 #info{
-  position:absolute;bottom:0;left:0;right:0;z-index:5;
-  background:linear-gradient(180deg,rgba(22,18,13,.86),rgba(14,11,7,.97));
-  border-top:1px solid rgba(231,214,180,.16);
-  color:#efe7d6;padding:18px 22px 20px;
-  transform:translateY(101%);transition:transform .32s cubic-bezier(.22,.61,.36,1);
-  backdrop-filter:blur(10px);
+  position:absolute;bottom:0;left:0;right:0;z-index:7;
+  background:linear-gradient(170deg,rgba(22,17,11,.9),rgba(12,9,5,.98));
+  border-top:1px solid rgba(231,214,180,.13);
+  color:var(--paper);padding:18px 22px 22px;
+  transform:translateY(101%);transition:transform .3s cubic-bezier(.22,.61,.36,1);
+  backdrop-filter:blur(12px);
 }
 #info.show{transform:translateY(0)}
-#info-name{font-family:'Fraunces',serif;font-size:19px;font-weight:600;margin-bottom:3px;letter-spacing:.2px}
-#info-sub{font-family:'Fraunces',serif;font-style:italic;font-size:12.5px;color:#a99d86;margin-bottom:11px}
-#info-body{font-size:12.5px;line-height:1.85;color:#cfc5af}
-#info-body .k{color:#8d8068;font-size:10.5px;text-transform:uppercase;letter-spacing:1px;margin-right:7px}
-.emi-tag{display:inline-block;background:linear-gradient(180deg,rgba(230,160,70,.28),rgba(230,160,70,.14));color:#f4c878;padding:2px 10px;border-radius:999px;font-size:10.5px;font-weight:600;border:1px solid rgba(230,160,70,.4);letter-spacing:.5px}
-#info-rels{margin-top:13px;display:flex;flex-wrap:wrap;gap:6px}
-.rel-pill{font-size:11px;padding:4px 11px;border-radius:999px;border:1px solid rgba(231,214,180,.18);color:#dcd2bc;cursor:pointer;background:rgba(231,214,180,.06);transition:all .15s ease;font-weight:500}
-.rel-pill:hover{background:rgba(231,214,180,.16);border-color:rgba(231,214,180,.35);transform:translateY(-1px)}
-.rel-pill .rk{color:#9b8f76;margin-right:5px}
-#info-src{margin-top:10px;font-size:11px;color:#7d7259;line-height:1.6;}
-#info-src a{color:#9b8f76;text-decoration:underline;}
-#close-btn{position:absolute;top:13px;right:18px;background:none;border:none;color:#8d8068;font-size:22px;cursor:pointer;line-height:1;transition:color .15s}
-#close-btn:hover{color:#efe7d6}
-#deeplink-btn{position:absolute;top:14px;right:50px;background:none;border:none;color:#6d6350;font-size:13px;cursor:pointer;line-height:1;transition:color .15s;font-family:'Archivo',sans-serif;}
-#deeplink-btn:hover{color:#d9cfba;}
-#sbar{position:absolute;top:60px;right:18px;font-size:10.5px;color:#8d8068;letter-spacing:.4px;pointer-events:none;z-index:3;text-align:right}
+#info-name{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:2px;letter-spacing:.15px}
+#info-sub{font-family:'Fraunces',serif;font-style:italic;font-size:12px;color:#9e9279;margin-bottom:10px}
+#info-body{font-size:12px;line-height:1.9;color:#c4ba9e}
+#info-body .k{color:var(--text-dim);font-size:10px;text-transform:uppercase;letter-spacing:1.2px;margin-right:6px}
+.emi-tag{
+  display:inline-block;
+  background:linear-gradient(160deg,rgba(230,160,70,.26),rgba(230,160,70,.12));
+  color:#f2c470;padding:2px 11px;border-radius:var(--r999);
+  font-size:10.5px;font-weight:600;border:1px solid rgba(230,160,70,.38);letter-spacing:.6px;
+}
+#info-rels{margin-top:12px;display:flex;flex-wrap:wrap;gap:5px}
+.rel-pill{
+  font-size:11px;padding:4px 11px;border-radius:var(--r999);
+  border:1px solid var(--ui-br);color:#d0c6ae;cursor:pointer;
+  background:rgba(231,214,180,.05);transition:all .13s;font-weight:500;
+}
+.rel-pill:hover{background:rgba(231,214,180,.14);border-color:var(--ui-br-h);transform:translateY(-1px)}
+.rel-pill .rk{color:#8d8068;margin-right:5px;font-weight:400}
+#info-src{margin-top:10px;font-size:11px;color:var(--text-dim);line-height:1.7}
+#info-src a{color:#9b8f76;text-decoration:underline}
+#close-btn{position:absolute;top:13px;right:17px;background:none;border:none;color:#7d7259;font-size:21px;cursor:pointer;transition:color .15s}
+#close-btn:hover{color:var(--paper)}
+#deeplink-btn{position:absolute;top:14px;right:48px;background:none;border:none;color:#5a5040;font-size:13px;cursor:pointer;transition:color .15s;font-family:'Archivo',sans-serif}
+#deeplink-btn:hover{color:var(--text)}
 
+/* loading */
 #loading{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  background:#0f0c08;z-index:10;border-radius:16px;
-  font-family:'Fraunces',serif;font-style:italic;color:#7d7259;font-size:15px;letter-spacing:.3px;
-  transition:opacity .4s;
+  background:#0c0904;z-index:30;border-radius:20px;
+  font-family:'Fraunces',serif;font-style:italic;color:var(--text-dim);
+  font-size:15px;letter-spacing:.4px;transition:opacity .4s;
 }
 
+/* ── modal contribuzione ── */
+#modal-overlay{
+  position:absolute;inset:0;z-index:20;
+  background:rgba(6,4,2,.82);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;
+  padding:18px;overflow-y:auto;
+}
+#modal-overlay.show{display:flex}
+#modal-box{
+  background:linear-gradient(170deg,#1e1810,#120e08);
+  border:1px solid rgba(231,214,180,.14);border-radius:18px;
+  padding:26px 26px 22px;width:100%;max-width:530px;
+  box-shadow:0 24px 70px rgba(0,0,0,.7);
+  max-height:calc(100vh - 40px);overflow-y:auto;
+}
+#modal-box::-webkit-scrollbar{width:4px}
+#modal-box::-webkit-scrollbar-track{background:transparent}
+#modal-box::-webkit-scrollbar-thumb{background:rgba(231,214,180,.15);border-radius:4px}
+.modal-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.modal-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--paper)}
+.modal-sub{font-family:'Fraunces',serif;font-style:italic;font-size:11.5px;color:#9e9279;margin-top:3px}
+#modal-close{background:none;border:none;color:#7d7259;font-size:20px;cursor:pointer;transition:color .15s;padding:0;line-height:1}
+#modal-close:hover{color:var(--paper)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row.full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-label{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim)}
+.form-label span{color:#c07040;margin-left:2px}
+.form-input,.form-select,.form-textarea{
+  background:rgba(10,7,4,.7);border:1px solid var(--ui-br);
+  border-radius:var(--r8);color:var(--text);
+  font-family:'Archivo',sans-serif;font-size:12.5px;
+  padding:8px 11px;outline:none;transition:border-color var(--trans);
+  -webkit-appearance:none;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--ui-br-h);color:var(--paper);
+}
+.form-input::placeholder,.form-textarea::placeholder{color:#3d3328}
+.form-select{cursor:pointer}
+.form-select option{background:#1a1410;color:var(--text)}
+.form-textarea{resize:vertical;min-height:64px;line-height:1.6}
+.form-divider{
+  height:1px;background:rgba(231,214,180,.08);
+  margin:16px 0 14px;
+}
+.form-section-title{
+  font-family:'Fraunces',serif;font-size:12px;font-style:italic;
+  color:#9e9279;margin-bottom:10px;
+}
+.modal-footer{
+  display:flex;gap:9px;justify-content:flex-end;margin-top:20px;
+  padding-top:16px;border-top:1px solid rgba(231,214,180,.08);
+}
+.btn-cancel{
+  font-family:'Archivo',sans-serif;font-size:12px;font-weight:500;
+  padding:8px 18px;border-radius:var(--r999);cursor:pointer;
+  border:1px solid var(--ui-br);background:transparent;
+  color:var(--text-dim);transition:all var(--trans);
+}
+.btn-cancel:hover{color:var(--text);border-color:var(--ui-br-h)}
+.btn-submit{
+  font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;
+  padding:8px 22px;border-radius:var(--r999);cursor:pointer;
+  border:1px solid rgba(230,180,80,.55);letter-spacing:.2px;
+  background:linear-gradient(160deg,rgba(230,180,80,.3),rgba(230,180,80,.14));
+  color:#fde9a8;transition:all var(--trans);
+}
+.btn-submit:hover{
+  background:linear-gradient(160deg,rgba(230,180,80,.45),rgba(230,180,80,.24));
+  box-shadow:0 3px 16px -4px rgba(230,180,80,.5);
+}
+.required-note{font-size:10px;color:var(--text-dim);margin-top:6px}
+
+/* ── responsive ── */
 @media(max-width:640px){
   #cv{height:560px}
-  #controls{max-width:55%}
-  #hdr h1{font-size:17px}
+  #hdr h1{font-size:16px}
   #legend{display:none}
-  #search-wrap{width:160px;}
+  #search-wrap{width:150px}
+  #topbar{flex-wrap:wrap}
+  #controls{max-width:100%;order:3}
+  .form-row{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 <div id="wrap">
   <div id="loading">Caricamento dati…</div>
-  <canvas id="cv" aria-label="Grafo genealogico della famiglia Sardagna" role="img"></canvas>
+  <canvas id="cv" aria-label="Grafo genealogico di Sardagna" role="img"></canvas>
   <div id="a11y-layer" aria-hidden="true"></div>
-  <div id="hdr">
-    <h1>Rete genealogica di Sardagna</h1>
-    <p>Demozzi · Degasperi · Berloffa — e l'emigrazione verso gli Stati Uniti</p>
+
+  <!-- top bar: header · search · controls -->
+  <div id="topbar">
+    <div id="hdr">
+      <h1>Rete genealogica di Sardagna</h1>
+      <p>Demozzi · Degasperi · Berloffa — diaspora verso gli USA</p>
+    </div>
+    <div id="search-wrap" role="search">
+      <input id="search" type="search" placeholder="Cerca persona…" autocomplete="off" aria-label="Cerca persona">
+      <button id="search-clear" aria-label="Cancella">×</button>
+      <div id="search-results" role="listbox"></div>
+    </div>
+    <div id="controls"><!-- generato da buildControls() --></div>
   </div>
+
   <div id="sbar"></div>
-  <div id="search-wrap" role="search">
-    <input id="search" type="search" placeholder="Cerca persona…" autocomplete="off" aria-label="Cerca persona nel grafo">
-    <button id="search-clear" aria-label="Cancella ricerca">×</button>
-    <div id="search-results" role="listbox" aria-label="Risultati ricerca"></div>
-  </div>
-  <div id="controls">
-    <button class="cbtn act" id="btn-all" onclick="setFilter('all',this)">tutti</button>
-    <button class="cbtn" id="btn-DEMOZZI" onclick="setFilter('DEMOZZI',this)">Demozzi</button>
-    <button class="cbtn" id="btn-DEGASPERI" onclick="setFilter('DEGASPERI',this)">Degasperi</button>
-    <button class="cbtn" id="btn-BERLOFFA" onclick="setFilter('BERLOFFA',this)">Berloffa</button>
-    <button class="cbtn" id="btn-usa" onclick="setFilter('usa',this)">emigrati USA</button>
-    <button class="cbtn" onclick="resetSim()">reset</button>
-  </div>
+
+  <!-- zoom -->
   <div id="zoomctl">
     <button class="zbtn" onclick="zoomBy(1.2)" aria-label="Zoom in">+</button>
     <button class="zbtn" onclick="zoomBy(.83)" aria-label="Zoom out">−</button>
-    <button class="zbtn" title="adatta alla vista" onclick="fitNow()" aria-label="Adatta alla vista">⤢</button>
+    <button class="zbtn" onclick="fitNow()" aria-label="Adatta">⤢</button>
   </div>
+
+  <!-- legend -->
   <div id="legend" aria-label="Legenda">
     <div class="lt">Famiglie</div>
     <div id="leg-fam"></div>
@@ -190,329 +328,468 @@ html,body{background:#0b0805}
       <div class="lrow"><span class="lln" style="border-top:2px solid rgba(220,210,185,.7)"></span>filiazione</div>
       <div class="lrow"><span class="lln" style="border-top:2px solid rgba(96,170,224,.85)"></span>paternità prob.</div>
       <div class="lrow"><span class="lln" style="border-top:2px solid rgba(224,120,160,.85)"></span>maternità prob.</div>
-      <div class="lrow"><span class="lln" style="border-top:2px dashed rgba(200,140,225,.85)"></span>unione / legame</div>
+      <div class="lrow"><span class="lln" style="border-top:2px dashed rgba(200,140,225,.85)"></span>unione</div>
       <div class="lrow"><span class="lln" style="border-top:2px dashed rgba(230,150,70,.9)"></span>stessa persona</div>
     </div>
   </div>
+
+  <!-- info panel -->
   <div id="info" role="dialog" aria-labelledby="info-name" aria-modal="false">
     <button id="close-btn" onclick="closeInfo()" aria-label="Chiudi">×</button>
-    <button id="deeplink-btn" onclick="copyDeepLink()" title="Copia link diretto" aria-label="Copia link diretto a questa persona">⌗</button>
+    <button id="deeplink-btn" onclick="copyDeepLink()" title="Copia link diretto">⌗</button>
     <div id="info-name"></div>
     <div id="info-sub"></div>
     <div id="info-body"></div>
     <div id="info-rels"></div>
     <div id="info-src"></div>
   </div>
-</div>
+
+  <!-- modal contribuzione -->
+  <div id="modal-overlay" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div id="modal-box">
+      <div class="modal-hdr">
+        <div>
+          <div class="modal-title" id="modal-title">Aggiungi un antenato</div>
+          <div class="modal-sub">La tua proposta verrà inviata per revisione</div>
+        </div>
+        <button id="modal-close" onclick="closeModal()" aria-label="Chiudi">×</button>
+      </div>
+
+      <div class="form-section-title">Chi era questa persona?</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="f-surname">Cognome <span>*</span></label>
+          <input class="form-input" id="f-surname" type="text" placeholder="es. Demozzi" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-given">Nome <span>*</span></label>
+          <input class="form-input" id="f-given" type="text" placeholder="es. Maria Rosa" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="f-birth">Anno di nascita</label>
+          <input class="form-input" id="f-birth" type="number" placeholder="es. 1872" min="1600" max="1970">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-death">Anno di morte</label>
+          <input class="form-input" id="f-death" type="number" placeholder="es. 1943" min="1600" max="2100">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="f-place">Luogo di nascita</label>
+          <input class="form-input" id="f-place" type="text" placeholder="es. Sardagna, Trento">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-spouse">Coniuge</label>
+          <input class="form-input" id="f-spouse" type="text" placeholder="es. Giovanni Berloffa">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="f-emi">Emigrazione</label>
+          <select class="form-select" id="f-emi">
+            <option value="">Nessuna / non so</option>
+            <option value="USA">USA</option>
+            <option value="ARG">Argentina</option>
+            <option value="BRA">Brasile</option>
+            <option value="CAN">Canada</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-emi-year">Anno emigrazione</label>
+          <input class="form-input" id="f-emi-year" type="number" placeholder="es. 1906" min="1840" max="1960">
+        </div>
+      </div>
+
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label" for="f-notes">Note (soprannomi, varianti del nome…)</label>
+          <input class="form-input" id="f-notes" type="text" placeholder="es. soprannome: Rizòti">
+        </div>
+      </div>
+
+      <div class="form-divider"></div>
+      <div class="form-section-title">Collegamento a una persona già presente nel grafo</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="f-rel-person">Persona collegata</label>
+          <select class="form-select" id="f-rel-person">
+            <option value="">— nessuno / non so —</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-rel-type">Tipo di legame</label>
+          <select class="form-select" id="f-rel-type">
+            <option value="figlio_di">è figlio/a di</option>
+            <option value="genitore_di">è genitore di</option>
+            <option value="coniuge_di">è coniuge di</option>
+            <option value="fratello_di">è fratello/sorella di</option>
+            <option value="stesso">è la stessa persona (deduplica)</option>
+            <option value="altro">altro (specifica nelle note)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-divider"></div>
+      <div class="form-section-title">Da dove viene questa informazione?</div>
+
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label" for="f-source">Fonte <span>*</span></label>
+          <input class="form-input" id="f-source" type="text"
+            placeholder="es. Registro battesimi Sardagna 1872, pag. 14">
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label" for="f-source-url">Link alla fonte (se disponibile online)</label>
+          <input class="form-input" id="f-source-url" type="url" placeholder="https://…">
+        </div>
+      </div>
+
+      <p class="required-note">I campi con <span style="color:#c07040">*</span> sono obbligatori. La proposta verrà inviata come segnalazione su GitHub — ti servirà un account gratuito per l'invio finale.</p>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal()">Annulla</button>
+        <button class="btn-submit" onclick="submitContribution()">Apri proposta su GitHub →</button>
+      </div>
+    </div>
+  </div>
+</div><!-- /wrap -->
 
 <script>
+/* ══════════════════════════════════════════════
+   PALETTE — colori base per cognomi noti
+   Per cognomi nuovi → auto-assign da EXTRA_COLORS
+   ══════════════════════════════════════════════ */
 const SUR_COL={
   DEMOZZI:"#e6b450", DEGASPERI:"#ecdcb6", BERLOFFA:"#5fc7a3",
-  CADONA:"#8aa6d6", MOZZI:"#c79bd6", CAVEDEN:"#9fb6cf",
-  ECCEL:"#a9c98a", DEPEDRI:"#dc9877", GARDUM:"#84c4cf", BONTEMPELLI:"#c2b48c"
+  CADONA:"#8aa6d6",  MOZZI:"#c79bd6",     CAVEDEN:"#9fb6cf",
+  ECCEL:"#a9c98a",   DEPEDRI:"#dc9877",   GARDUM:"#84c4cf",
+  BONTEMPELLI:"#c2b48c"
 };
 const SUR_LABEL={
-  DEMOZZI:"Demozzi",DEGASPERI:"Degasperi",BERLOFFA:"Berloffa",CADONA:"Cadona",
-  MOZZI:"Mozzi",CAVEDEN:"Caveden",ECCEL:"Eccel",DEPEDRI:"Depedri",GARDUM:"Gardum",BONTEMPELLI:"Bontempelli"
+  DEMOZZI:"Demozzi", DEGASPERI:"Degasperi", BERLOFFA:"Berloffa",
+  CADONA:"Cadona",   MOZZI:"Mozzi",         CAVEDEN:"Caveden",
+  ECCEL:"Eccel",     DEPEDRI:"Depedri",     GARDUM:"Gardum",
+  BONTEMPELLI:"Bontempelli"
 };
+// Colori per cognomi nuovi (rotazione)
+const EXTRA_COLORS=["#e07a6a","#70c8b0","#a0b8e8","#e0b878","#b888d8","#78c8c8","#d0a888","#88c880","#e8a0c0","#a0d0a0"];
+let _extraIdx=0;
+
+function surColor(s){
+  if(!SUR_COL[s]){
+    SUR_COL[s]=EXTRA_COLORS[_extraIdx%EXTRA_COLORS.length];
+    SUR_LABEL[s]=s.charAt(0)+s.slice(1).toLowerCase();
+    _extraIdx++;
+  }
+  return SUR_COL[s];
+}
+function surLabel(s){surColor(s);return SUR_LABEL[s]||s;}
+
 const REL_TYPE={
-  filial:"filiazione", marriage:"cross",
-  probable_father:"naiss_padre", probable_mother:"naiss_madre", same_person:"stesso"
+  filial:"filiazione",marriage:"cross",
+  probable_father:"naiss_padre",probable_mother:"naiss_madre",same_person:"stesso"
 };
 const EDGE_COL={
-  filiazione:"220,210,185", naiss_padre:"96,170,224", naiss_madre:"224,120,160",
-  stesso:"230,150,70", cross:"200,140,225"
+  filiazione:"220,210,185",naiss_padre:"96,170,224",naiss_madre:"224,120,160",
+  stesso:"230,150,70",cross:"200,140,225"
 };
 
-function hx(c){c=c.replace('#','');return[parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)];}
-function mix(c,t,a){const A=hx(c),B=typeof t==='string'?hx(t):t;return`rgb(${Math.round(A[0]+(B[0]-A[0])*a)},${Math.round(A[1]+(B[1]-A[1])*a)},${Math.round(A[2]+(B[2]-A[2])*a)})`;}
-function lite(c,a){return mix(c,[255,250,238],a);}
-function dark(c,a){return mix(c,[20,14,8],a);}
-function lum(c){const[r,g,b]=hx(c);return(0.299*r+0.587*g+0.114*b)/255;}
+/* ══ color helpers ══ */
+function hx(c){c=c.replace('#','');return[parseInt(c.slice(0,2),16),parseInt(c.slice(2,4),16),parseInt(c.slice(4,6),16)]}
+function mix(c,t,a){const A=hx(c),B=typeof t==='string'?hx(t):t;return`rgb(${Math.round(A[0]+(B[0]-A[0])*a)},${Math.round(A[1]+(B[1]-A[1])*a)},${Math.round(A[2]+(B[2]-A[2])*a)})`}
+function lite(c,a){return mix(c,[255,250,238],a)}
+function dark(c,a){return mix(c,[20,14,8],a)}
+function lum(c){const[r,g,b]=hx(c);return(0.299*r+0.587*g+0.114*b)/255}
 
+/* ══ canvas ══ */
 const wrap=document.getElementById('wrap');
 const cv=document.getElementById('cv');
 const ctx=cv.getContext('2d');
-let cssW=1000, cssH=640, dpr=Math.max(1,Math.min(2.5,window.devicePixelRatio||1));
+let cssW=1020,cssH=640,dpr=Math.max(1,Math.min(2.5,window.devicePixelRatio||1));
 let bgCanvas=document.createElement('canvas');
 
 function buildBG(){
   bgCanvas.width=Math.round(cssW*dpr);bgCanvas.height=Math.round(cssH*dpr);
   const b=bgCanvas.getContext('2d');b.scale(dpr,dpr);
-  const g=b.createRadialGradient(cssW*0.32,cssH*0.18,40,cssW*0.4,cssH*0.4,cssH*1.15);
-  g.addColorStop(0,'#262017');g.addColorStop(.5,'#171209');g.addColorStop(1,'#0b0805');
+  const g=b.createRadialGradient(cssW*.3,cssH*.16,30,cssW*.42,cssH*.42,cssH*1.2);
+  g.addColorStop(0,'#272118');g.addColorStop(.48,'#16120a');g.addColorStop(1,'#090603');
   b.fillStyle=g;b.fillRect(0,0,cssW,cssH);
-  const v=b.createRadialGradient(cssW/2,cssH/2,cssH*0.25,cssW/2,cssH/2,cssH*0.95);
-  v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.5)');
+  const v=b.createRadialGradient(cssW/2,cssH/2,cssH*.22,cssW/2,cssH/2,cssH*.98);
+  v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.48)');
   b.fillStyle=v;b.fillRect(0,0,cssW,cssH);
   const n=document.createElement('canvas');n.width=160;n.height=160;
   const nc=n.getContext('2d');const id=nc.createImageData(160,160);
-  for(let i=0;i<id.data.length;i+=4){const r=Math.random()*255;id.data[i]=id.data[i+1]=id.data[i+2]=r;id.data[i+3]=14;}
+  for(let i=0;i<id.data.length;i+=4){const r=Math.random()*255;id.data[i]=id.data[i+1]=id.data[i+2]=r;id.data[i+3]=13;}
   nc.putImageData(id,0,0);
-  b.globalAlpha=.5;const pat=b.createPattern(n,'repeat');b.fillStyle=pat;b.fillRect(0,0,cssW,cssH);b.globalAlpha=1;
+  b.globalAlpha=.45;b.fillStyle=b.createPattern(n,'repeat');b.fillRect(0,0,cssW,cssH);b.globalAlpha=1;
 }
-
 function resize(){
-  const w=wrap.clientWidth||1000;
-  cssW=w; cssH=(window.innerWidth<=640)?560:640;
+  const w=wrap.clientWidth||1020;
+  cssW=w;cssH=window.innerWidth<=640?560:640;
   dpr=Math.max(1,Math.min(2.5,window.devicePixelRatio||1));
   cv.width=Math.round(cssW*dpr);cv.height=Math.round(cssH*dpr);
   cv.style.height=cssH+'px';
   ctx.setTransform(dpr,0,0,dpr,0,0);
-  buildBG();
-  autoFit=true;
+  buildBG();autoFit=true;
 }
 
-let PERSONS=[], ALL_EDGES=[], pmap={}, deg={}, maxDeg=1;
-let activeFilter='all', selectedId=null, hoverId=null, searchQuery='';
-let dragging=null, panStart=null, panBase=null;
-let pan={x:0,y:0}, tpan={x:0,y:0}, zoom=1, tzoom=1;
-let simRunning=false, frame=0, autoFit=true, userMoved=false, t=0;
+/* ══ state ══ */
+let PERSONS=[],ALL_EDGES=[],pmap={},deg={},maxDeg=1;
+let activeFilter='all',selectedId=null,hoverId=null,searchQuery='';
+let dragging=null,panStart=null,panBase=null;
+let pan={x:0,y:0},tpan={x:0,y:0},zoom=1,tzoom=1;
+let simRunning=false,frame=0,autoFit=true,userMoved=false,t=0;
 let a11yNodes={};
 
+/* ══ data adapter ══ */
 function initData(raw){
   PERSONS=raw.individuals.map(ind=>({
-    id:ind.id, s:ind.surname, g:ind.givenNames, b:ind.birthYear||null,
-    sp:ind.spouse||null, emi:ind.emigration?.destination||null,
-    emiYear:ind.emigration?.year||null, notes:ind.notes||null,
-    birthPlace:ind.birthPlace||null, deathYear:ind.deathYear||null,
+    id:ind.id,s:ind.surname,g:ind.givenNames,b:ind.birthYear||null,
+    sp:ind.spouse||null,emi:ind.emigration?.destination||null,
+    emiYear:ind.emigration?.year||null,notes:ind.notes||null,
+    birthPlace:ind.birthPlace||null,deathYear:ind.deathYear||null,
   }));
   ALL_EDGES=raw.relationships.map(rel=>({
-    s:rel.from, t:rel.to, type:REL_TYPE[rel.type]||rel.type,
-    lbl:rel.sources?.[0]?.description||null, sources:rel.sources||[],
+    s:rel.from,t:rel.to,type:REL_TYPE[rel.type]||rel.type,
+    lbl:rel.sources?.[0]?.description||null,sources:rel.sources||[],
   }));
   const pi={};
   PERSONS.forEach((p,i)=>{
     const a=i/PERSONS.length*Math.PI*2;
     pi[p.id]={...p,x:Math.cos(a)*180+(Math.random()-.5)*40,y:Math.sin(a)*150+(Math.random()-.5)*40,vx:0,vy:0};
+    surColor(p.s); // assicura colore per ogni cognome
   });
   pmap=pi;
-  deg={};
-  PERSONS.forEach(p=>deg[p.id]=0);
+  deg={};PERSONS.forEach(p=>deg[p.id]=0);
   ALL_EDGES.forEach(e=>{deg[e.s]=(deg[e.s]||0)+1;deg[e.t]=(deg[e.t]||0)+1;});
   maxDeg=Math.max(...Object.values(deg),1);
 }
 
+/* ══ visibilità ══ */
 function visNodes(){
   if(activeFilter==='all')return PERSONS;
   if(activeFilter==='usa')return PERSONS.filter(p=>p.emi==='USA');
   return PERSONS.filter(p=>p.s===activeFilter);
 }
-function visIds(){return new Set(visNodes().map(p=>p.id));}
-function visEdges(){const vi=visIds();return ALL_EDGES.filter(e=>vi.has(e.s)&&vi.has(e.t));}
-function firstName(p){return p.g.split(/\s+/)[0];}
-function initials(p){const parts=p.g.split(/\s+/);return(parts[0][0]+(parts[1]?parts[1][0]:'')).toUpperCase();}
-function nodeR(p){const d=deg[p.id]||1;const base=activeFilter!=='all'?13:9;return base+Math.sqrt(d/maxDeg)*14;}
-function collR(p){ctx.font="12px Archivo";const w=ctx.measureText(firstName(p)).width;return Math.max(nodeR(p)+14,w*0.55+10);}
+function visIds(){return new Set(visNodes().map(p=>p.id))}
+function visEdges(){const vi=visIds();return ALL_EDGES.filter(e=>vi.has(e.s)&&vi.has(e.t))}
 
-function getSearchMatches(q){
+function firstName(p){return p.g.split(/\s+/)[0]}
+function initials(p){const w=p.g.split(/\s+/);return(w[0][0]+(w[1]?w[1][0]:'')).toUpperCase()}
+function nodeR(p){return(activeFilter!=='all'?13:9)+Math.sqrt((deg[p.id]||1)/maxDeg)*14}
+function collR(p){ctx.font="12px Archivo";return Math.max(nodeR(p)+14,ctx.measureText(firstName(p)).width*.55+10)}
+
+/* ══ search ══ */
+function getMatches(q){
   if(!q||q.length<2)return[];
   const lq=q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-  return PERSONS.filter(p=>{
-    const full=(p.g+' '+SUR_LABEL[p.s]).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
-    return full.includes(lq);
-  }).slice(0,7);
+  return PERSONS.filter(p=>(p.g+' '+surLabel(p.s)).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(lq)).slice(0,7);
 }
-function renderSearchResults(matches){
+function renderMatches(ms){
   const box=document.getElementById('search-results');
-  if(!matches.length){box.style.display='none';return;}
+  if(!ms.length){box.style.display='none';return}
   box.style.display='block';box.innerHTML='';
-  matches.forEach(p=>{
-    const col=SUR_COL[p.s]||'#c9c1ad';
-    const div=document.createElement('div');
-    div.className='sr-item';div.setAttribute('role','option');div.setAttribute('tabindex','0');
-    div.innerHTML=`<span class="sr-name">${p.g}</span><span class="sr-fam" style="background:${col}22;color:${lite(col,0.3)};border:1px solid ${col}44">${SUR_LABEL[p.s]||p.s}</span><span class="sr-yr">${p.b||''}</span>`;
-    div.onclick=()=>jumpToNode(p.id);
-    div.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')jumpToNode(p.id);};
-    box.appendChild(div);
+  ms.forEach(p=>{
+    const col=surColor(p.s);
+    const d=document.createElement('div');
+    d.className='sr-item';d.setAttribute('role','option');d.setAttribute('tabindex','0');
+    d.innerHTML=`<span class="sr-name">${p.g}</span><span class="sr-tag" style="background:${col}1a;color:${lite(col,.28)};border:1px solid ${col}38">${surLabel(p.s)}</span><span class="sr-yr">${p.b||''}</span>`;
+    d.onclick=()=>jumpTo(p.id);
+    d.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')jumpTo(p.id)};
+    box.appendChild(d);
   });
 }
-function jumpToNode(id){
+function jumpTo(id){
   document.getElementById('search').value='';
   document.getElementById('search-results').style.display='none';
   document.getElementById('search-clear').style.display='none';
   searchQuery='';
   const p=PERSONS.find(x=>x.id===id);if(!p)return;
-  if(activeFilter!=='all'&&activeFilter!=='usa'&&p.s!==activeFilter){
-    setFilter('all',document.getElementById('btn-all'));
-  }else if(activeFilter==='usa'&&p.emi!=='USA'){
-    setFilter('all',document.getElementById('btn-all'));
-  }
+  if(activeFilter!=='all'&&activeFilter!=='usa'&&p.s!==activeFilter)setFilter('all');
+  else if(activeFilter==='usa'&&p.emi!=='USA')setFilter('all');
   const n=pmap[id];
-  if(n){const z=Math.max(zoom,1.4);pan.x=cssW/2-n.x*z;pan.y=cssH/2-n.y*z;tpan={...pan};zoom=z;tzoom=z;userMoved=true;}
+  if(n){const z=Math.max(zoom,1.5);pan.x=cssW/2-n.x*z;pan.y=cssH/2-n.y*z;tpan={...pan};zoom=z;tzoom=z;userMoved=true;}
   selectNode(id);
 }
 
+/* ══ simulazione ══ */
 function simulate(){
   if(!simRunning&&!autoFit)return;
   const nodes=visNodes().map(p=>pmap[p.id]);
   const edges=visEdges();
   if(simRunning){
-    const k=0.02,rep=2600,damp=0.86,ctr=0.006;
-    for(let i=0;i<nodes.length;i++){
-      for(let j=i+1;j<nodes.length;j++){
-        const a=nodes[i],b=nodes[j];
-        let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||1;
-        const f=rep/(d*d);const fx=f*dx/d,fy=f*dy/d;
-        a.vx-=fx;a.vy-=fy;b.vx+=fx;b.vy+=fy;
-      }
+    const k=.02,rep=2600,damp=.86,ctr=.006;
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i],b=nodes[j];
+      let dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+      const f=rep/(d*d),fx=f*dx/d,fy=f*dy/d;
+      a.vx-=fx;a.vy-=fy;b.vx+=fx;b.vy+=fy;
     }
     edges.forEach(e=>{
       const a=pmap[e.s],b=pmap[e.t];if(!a||!b)return;
-      const dx=b.x-a.x,dy=b.y-a.y;const d=Math.sqrt(dx*dx+dy*dy)||1;
-      const idealL=e.type==='filiazione'?78:110;
-      const f=(d-idealL)*k;const fx=f*dx/d,fy=f*dy/d;
+      const dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+      const ideal=e.type==='filiazione'?78:110,f=(d-ideal)*k,fx=f*dx/d,fy=f*dy/d;
       a.vx+=fx;a.vy+=fy;b.vx-=fx;b.vy-=fy;
     });
-    nodes.forEach(n=>{n.vx+=(0-n.x)*ctr;n.vy+=(0-n.y)*ctr;});
-    for(let it=0;it<2;it++){
-      for(let i=0;i<nodes.length;i++){
-        for(let j=i+1;j<nodes.length;j++){
-          const a=nodes[i],b=nodes[j];
-          const rr=collR(pmap[a.id])+collR(pmap[b.id]);
-          let dx=b.x-a.x,dy=b.y-a.y;let d=Math.sqrt(dx*dx+dy*dy)||1;
-          if(d<rr){const o=(rr-d)/d*0.5;const ox=dx*o,oy=dy*o;
-            if(a.id!==dragging){a.x-=ox;a.y-=oy;}
-            if(b.id!==dragging){b.x+=ox;b.y+=oy;}}
-        }
-      }
+    nodes.forEach(n=>{n.vx+=(0-n.x)*ctr;n.vy+=(0-n.y)*ctr});
+    for(let it=0;it<2;it++)for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i],b=nodes[j];
+      const rr=collR(pmap[a.id])+collR(pmap[b.id]);
+      let dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+      if(d<rr){const o=(rr-d)/d*.5,ox=dx*o,oy=dy*o;
+        if(a.id!==dragging){a.x-=ox;a.y-=oy}
+        if(b.id!==dragging){b.x+=ox;b.y+=oy}}
     }
-    nodes.forEach(n=>{if(n.id===dragging)return;n.vx*=damp;n.vy*=damp;n.x+=n.vx;n.y+=n.vy;});
+    nodes.forEach(n=>{if(n.id===dragging)return;n.vx*=damp;n.vy*=damp;n.x+=n.vx;n.y+=n.vy});
     frame++;if(frame>520)simRunning=false;
   }
   if(autoFit&&!userMoved)computeFit(nodes);
-  pan.x+=(tpan.x-pan.x)*0.12;pan.y+=(tpan.y-pan.y)*0.12;zoom+=(tzoom-zoom)*0.12;
+  pan.x+=(tpan.x-pan.x)*.12;pan.y+=(tpan.y-pan.y)*.12;zoom+=(tzoom-zoom)*.12;
 }
 function computeFit(nodes){
   if(!nodes.length)return;
   let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
   nodes.forEach(n=>{const c=collR(pmap[n.id]);
     minx=Math.min(minx,n.x-c);maxx=Math.max(maxx,n.x+c);
-    miny=Math.min(miny,n.y-c);maxy=Math.max(maxy,n.y+c+18);});
-  const bw=maxx-minx,bh=maxy-miny;const pad=70;
+    miny=Math.min(miny,n.y-c);maxy=Math.max(maxy,n.y+c+18)});
+  const bw=maxx-minx,bh=maxy-miny,pad=70;
   let z=Math.min((cssW-pad)/bw,(cssH-pad-40)/bh);
-  z=Math.max(.42,Math.min(2.2,z));
-  tzoom=z;
-  tpan.x=cssW/2-((minx+maxx)/2)*z;
-  tpan.y=(cssH/2-12)-((miny+maxy)/2)*z;
+  z=Math.max(.42,Math.min(2.2,z));tzoom=z;
+  tpan.x=cssW/2-((minx+maxx)/2)*z;tpan.y=(cssH/2-12)-((miny+maxy)/2)*z;
 }
-function screenToWorld(sx,sy){return{x:(sx-pan.x)/zoom,y:(sy-pan.y)/zoom};}
+function screenToWorld(sx,sy){return{x:(sx-pan.x)/zoom,y:(sy-pan.y)/zoom}}
 
-function updateA11yLayer(){
-  const layer=document.getElementById('a11y-layer');
-  const vi=visIds();
-  Object.keys(a11yNodes).forEach(id=>{if(!vi.has(id)){a11yNodes[id].remove();delete a11yNodes[id];}});
-  visNodes().forEach(p=>{
-    const n=pmap[p.id];if(!n)return;
-    const sp=p.b?`, nato ${p.b}`:'';const em=p.emi?`, emigrato in ${p.emi}`:'';
-    let el=a11yNodes[p.id];
-    if(!el){
-      el=document.createElement('button');el.className='a11y-node';
-      el.setAttribute('role','button');layer.appendChild(el);
-      a11yNodes[p.id]=el;el.onclick=()=>selectNode(p.id);
-    }
-    el.textContent=`${p.g} ${SUR_LABEL[p.s]||p.s}${sp}${em}`;
-    el.setAttribute('aria-pressed',selectedId===p.id?'true':'false');
-  });
-}
+/* ══ draw ══ */
+function roundRect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 
-function roundRect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
-
-let a11yFrameCounter=0;
+let a11yTick=0;
 function draw(){
   ctx.clearRect(0,0,cssW,cssH);ctx.drawImage(bgCanvas,0,0,cssW,cssH);
   const edges=visEdges();
   ctx.save();ctx.translate(pan.x,pan.y);ctx.scale(zoom,zoom);
+
   edges.forEach(e=>{
     const a=pmap[e.s],b=pmap[e.t];if(!a||!b)return;
     const isSel=selectedId&&(selectedId===e.s||selectedId===e.t);
-    const base=e.type==='filiazione'?0.4:0.6;
-    const alpha=selectedId?(isSel?0.95:0.05):base;
-    const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
-    const dx=b.x-a.x,dy=b.y-a.y;const len=Math.sqrt(dx*dx+dy*dy)||1;
-    const curve=Math.min(len*0.12,26);
-    const cxp=mx-dy/len*curve,cyp=my+dx/len*curve;
+    const alpha=selectedId?(isSel?.95:.05):(e.type==='filiazione'?.4:.6);
+    const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=b.x-a.x,dy=b.y-a.y,len=Math.sqrt(dx*dx+dy*dy)||1;
+    const curve=Math.min(len*.12,26),cxp=mx-dy/len*curve,cyp=my+dx/len*curve;
     ctx.save();ctx.globalAlpha=alpha;
     ctx.strokeStyle=`rgb(${EDGE_COL[e.type]||'200,190,170'})`;
     ctx.lineWidth=(isSel?2.4:(e.type==='filiazione'?1.1:1.4))/Math.max(.6,zoom);
     if(e.type==='stesso'||e.type==='cross')ctx.setLineDash([5/zoom,5/zoom]);else ctx.setLineDash([]);
-    if(isSel){ctx.shadowColor=`rgba(${EDGE_COL[e.type]||'200,190,170'},.8)`;ctx.shadowBlur=8;}
+    if(isSel){ctx.shadowColor=`rgba(${EDGE_COL[e.type]||'200,190,170'},.8)`;ctx.shadowBlur=8}
     ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(cxp,cyp,b.x,b.y);ctx.stroke();
     ctx.restore();
   });
+
   visNodes().forEach(p=>{
-    const n=pmap[p.id];const r=nodeR(p);
-    const isSel=selectedId===p.id;const isHov=hoverId===p.id;
+    const n=pmap[p.id],r=nodeR(p);
+    const isSel=selectedId===p.id,isHov=hoverId===p.id;
     const isConn=selectedId&&ALL_EDGES.some(e=>(e.s===selectedId&&e.t===p.id)||(e.t===selectedId&&e.s===p.id));
-    const isSearch=searchQuery.length>=2&&(p.g+' '+(SUR_LABEL[p.s]||p.s)).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(searchQuery.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''));
-    const dim=selectedId&&!isSel&&!isConn?0.18:1;
-    const col=SUR_COL[p.s]||'#c9c1ad';
+    const isSearch=searchQuery.length>=2&&(p.g+' '+surLabel(p.s)).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes(searchQuery.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''));
+    const dim=selectedId&&!isSel&&!isConn?.18:1;
+    const col=surColor(p.s);
+
     ctx.save();ctx.globalAlpha=dim;
+
     if(isSel){
-      const pulse=1+Math.sin(t*0.05)*0.06;
+      const pulse=1+Math.sin(t*.05)*.06;
       const gg=ctx.createRadialGradient(n.x,n.y,r,n.x,n.y,r*3.4*pulse);
       gg.addColorStop(0,'rgba(230,180,80,.32)');gg.addColorStop(1,'rgba(230,180,80,0)');
       ctx.fillStyle=gg;ctx.beginPath();ctx.arc(n.x,n.y,r*3.4*pulse,0,7);ctx.fill();
     }
     if(isSearch&&!isSel){
       ctx.beginPath();ctx.arc(n.x,n.y,r+7,0,7);
-      ctx.strokeStyle='rgba(255,255,180,.7)';ctx.lineWidth=2/Math.max(.7,zoom);
+      ctx.strokeStyle='rgba(255,255,180,.68)';ctx.lineWidth=2/Math.max(.7,zoom);
       ctx.setLineDash([3/zoom,3/zoom]);ctx.stroke();ctx.setLineDash([]);
     }
     if(p.emi==='USA'){
       ctx.beginPath();ctx.arc(n.x,n.y,r+4.5,0,7);
-      ctx.strokeStyle='rgba(240,170,70,'+(0.75+Math.sin(t*0.04+r)*0.15)+')';
+      ctx.strokeStyle=`rgba(240,170,70,${.72+Math.sin(t*.04+r)*.16})`;
       ctx.lineWidth=2/Math.max(.7,zoom);ctx.setLineDash([]);
-      ctx.shadowColor='rgba(240,170,70,.6)';ctx.shadowBlur=7;ctx.stroke();ctx.shadowBlur=0;
+      ctx.shadowColor='rgba(240,170,70,.55)';ctx.shadowBlur=7;ctx.stroke();ctx.shadowBlur=0;
     }
-    ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=r*0.7;ctx.shadowOffsetY=r*0.32;
-    const grad=ctx.createRadialGradient(n.x-r*0.36,n.y-r*0.42,r*0.12,n.x,n.y,r*1.05);
-    grad.addColorStop(0,lite(col,0.6));grad.addColorStop(0.45,col);grad.addColorStop(1,dark(col,0.42));
-    ctx.fillStyle=grad;ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fill();
+
+    ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=r*.7;ctx.shadowOffsetY=r*.32;
+    const g=ctx.createRadialGradient(n.x-r*.36,n.y-r*.42,r*.12,n.x,n.y,r*1.05);
+    g.addColorStop(0,lite(col,.6));g.addColorStop(.45,col);g.addColorStop(1,dark(col,.42));
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fill();
     ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+
     ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);
-    ctx.strokeStyle=isSel?'rgba(255,235,150,.95)':(isHov?'rgba(255,250,235,.7)':'rgba(255,250,235,.28)');
+    ctx.strokeStyle=isSel?'rgba(255,235,150,.95)':(isHov?'rgba(255,250,235,.7)':'rgba(255,250,235,.26)');
     ctx.lineWidth=(isSel?2:1)/Math.max(.7,zoom);ctx.stroke();
-    ctx.beginPath();ctx.ellipse(n.x-r*0.32,n.y-r*0.38,r*0.34,r*0.22,-0.5,0,7);
-    ctx.fillStyle='rgba(255,255,255,.28)';ctx.fill();
+
+    ctx.beginPath();ctx.ellipse(n.x-r*.32,n.y-r*.38,r*.34,r*.22,-.5,0,7);
+    ctx.fillStyle='rgba(255,255,255,.26)';ctx.fill();
+
     if(r>=12){
-      ctx.font=`600 ${Math.max(9,r*0.78)}px Archivo`;
+      ctx.font=`600 ${Math.max(9,r*.78)}px Archivo`;
       ctx.textAlign='center';ctx.textBaseline='middle';
-      ctx.fillStyle=lum(col)>0.62?'rgba(40,28,12,.92)':'rgba(255,250,240,.96)';
-      ctx.fillText(initials(p),n.x,n.y+r*0.04);
+      ctx.fillStyle=lum(col)>.62?'rgba(40,28,12,.92)':'rgba(255,250,240,.96)';
+      ctx.fillText(initials(p),n.x,n.y+r*.04);
     }
     ctx.restore();
+
+    // chip etichetta
     ctx.save();ctx.globalAlpha=dim;
     const showFull=isSel||isConn||isHov;
     let label=showFull?p.g:firstName(p);
     if(label.length>22)label=label.slice(0,21)+'…';
     ctx.font=`${showFull?'600':'500'} 12px Archivo`;
     const tw=ctx.measureText(label).width;
-    const ty=n.y+r+13;
-    const padX=7,chh=18,chw=tw+padX*2,cx0=n.x-chw/2;
-    ctx.globalAlpha=dim*(showFull?0.96:0.8);
+    const ty=n.y+r+13,padX=7,chh=18,chw=tw+padX*2,cx0=n.x-chw/2;
+    ctx.globalAlpha=dim*(showFull?.96:.78);
     roundRect(ctx,cx0,ty-chh/2,chw,chh,9);
     const bg=ctx.createLinearGradient(0,ty-chh/2,0,ty+chh/2);
-    bg.addColorStop(0,'rgba(28,22,15,.92)');bg.addColorStop(1,'rgba(14,11,7,.95)');
-    ctx.fillStyle=showFull?bg:'rgba(16,12,8,.82)';ctx.fill();
+    bg.addColorStop(0,'rgba(26,20,13,.93)');bg.addColorStop(1,'rgba(12,9,5,.96)');
+    ctx.fillStyle=showFull?bg:'rgba(14,10,6,.8)';ctx.fill();
     ctx.lineWidth=1/Math.max(.7,zoom);
-    ctx.strokeStyle=`rgba(${hx(col).join(',')},${showFull?0.55:0.3})`;ctx.stroke();
+    ctx.strokeStyle=`rgba(${hx(col).join(',')},${showFull?.52:.26})`;ctx.stroke();
     ctx.globalAlpha=dim;ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillStyle=showFull?'#f4ead4':lite(col,0.25);
-    ctx.fillText(label,n.x,ty+0.5);
+    ctx.fillStyle=showFull?'#f2e8d2':lite(col,.22);
+    ctx.fillText(label,n.x,ty+.5);
     if(showFull&&p.b){
-      ctx.font='500 10px Archivo';ctx.fillStyle='#9b8f76';
+      ctx.font='500 10px Archivo';ctx.fillStyle='#8d8068';
       ctx.fillText('· '+p.b+(p.emi?'  '+p.emi:''),n.x,ty+chh-2);
     }
     ctx.restore();
   });
+
   ctx.restore();
   document.getElementById('sbar').textContent=`${visNodes().length} persone · ${edges.length} legami`;
-  if(++a11yFrameCounter%6===0)updateA11yLayer();
+  if(++a11yTick%6===0)updateA11y();
+}
+function loop(){t++;simulate();draw();requestAnimationFrame(loop)}
+
+/* ══ a11y ══ */
+function updateA11y(){
+  const layer=document.getElementById('a11y-layer'),vi=visIds();
+  Object.keys(a11yNodes).forEach(id=>{if(!vi.has(id)){a11yNodes[id].remove();delete a11yNodes[id]}});
+  visNodes().forEach(p=>{
+    let el=a11yNodes[p.id];
+    if(!el){
+      el=document.createElement('button');el.className='a11y-node';
+      document.getElementById('a11y-layer').appendChild(el);
+      a11yNodes[p.id]=el;el.onclick=()=>selectNode(p.id);
+    }
+    el.textContent=`${p.g} ${surLabel(p.s)}${p.b?', nato '+p.b:''}${p.emi?', emigrato '+p.emi:''}`;
+    el.setAttribute('aria-pressed',selectedId===p.id?'true':'false');
+  });
 }
 
-function loop(){t++;simulate();draw();requestAnimationFrame(loop);}
-
+/* ══ interazione mouse/touch ══ */
 function getRawPos(e){
   const rb=cv.getBoundingClientRect();
   return{x:(e.touches?e.touches[0].clientX:e.clientX)-rb.left,y:(e.touches?e.touches[0].clientY:e.clientY)-rb.top};
@@ -520,24 +797,24 @@ function getRawPos(e){
 function getNodeAt(wx,wy){
   const vi=visIds();let best=null,bestD=1e9;
   for(const p of PERSONS){
-    if(!vi.has(p.id))continue;const n=pmap[p.id];const r=nodeR(p);
-    const dx=n.x-wx,dy=n.y-wy;const d=Math.sqrt(dx*dx+dy*dy);
-    if(d<r+5&&d<bestD){bestD=d;best=p.id;}
+    if(!vi.has(p.id))continue;
+    const n=pmap[p.id],r=nodeR(p),dx=n.x-wx,dy=n.y-wy,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<r+5&&d<bestD){bestD=d;best=p.id}
   }
   return best;
 }
 let mouseDownTime=0,mouseDownId=null;
 function down(e){
-  const raw=getRawPos(e);const w=screenToWorld(raw.x,raw.y);const hit=getNodeAt(w.x,w.y);
+  const raw=getRawPos(e),w=screenToWorld(raw.x,raw.y),hit=getNodeAt(w.x,w.y);
   mouseDownTime=Date.now();mouseDownId=hit;
-  if(hit){dragging=hit;simRunning=true;userMoved=true;cv.classList.add('dg');}
-  else{panStart={x:raw.x,y:raw.y};panBase={...pan};cv.classList.add('dg');}
+  if(hit){dragging=hit;simRunning=true;userMoved=true;cv.classList.add('dg')}
+  else{panStart={x:raw.x,y:raw.y};panBase={...pan};cv.classList.add('dg')}
 }
 function move(e){
-  const raw=getRawPos(e);const w=screenToWorld(raw.x,raw.y);
-  if(dragging){const n=pmap[dragging];n.x=w.x;n.y=w.y;n.vx=0;n.vy=0;simRunning=true;}
-  else if(panStart){pan.x=panBase.x+(raw.x-panStart.x);pan.y=panBase.y+(raw.y-panStart.y);tpan={...pan};userMoved=true;}
-  else{const h=getNodeAt(w.x,w.y);hoverId=h;cv.style.cursor=h?'pointer':'grab';}
+  const raw=getRawPos(e),w=screenToWorld(raw.x,raw.y);
+  if(dragging){const n=pmap[dragging];n.x=w.x;n.y=w.y;n.vx=0;n.vy=0;simRunning=true}
+  else if(panStart){pan.x=panBase.x+(raw.x-panStart.x);pan.y=panBase.y+(raw.y-panStart.y);tpan={...pan};userMoved=true}
+  else{const h=getNodeAt(w.x,w.y);hoverId=h;cv.style.cursor=h?'pointer':'grab'}
 }
 function up(){
   if(dragging&&Date.now()-mouseDownTime<200){
@@ -548,31 +825,32 @@ function up(){
 cv.addEventListener('mousedown',down);
 window.addEventListener('mousemove',move);
 window.addEventListener('mouseup',up);
-cv.addEventListener('touchstart',e=>{down(e);},{passive:true});
-cv.addEventListener('touchmove',e=>{e.preventDefault();move(e);},{passive:false});
+cv.addEventListener('touchstart',e=>{down(e)},{passive:true});
+cv.addEventListener('touchmove',e=>{e.preventDefault();move(e)},{passive:false});
 cv.addEventListener('touchend',up);
 cv.addEventListener('wheel',e=>{
   e.preventDefault();userMoved=true;
-  const raw=getRawPos(e);const f=e.deltaY<0?1.12:0.89;
-  const nz=Math.min(3,Math.max(0.35,zoom*f));
+  const raw=getRawPos(e),f=e.deltaY<0?1.12:.89;
+  const nz=Math.min(3,Math.max(.35,zoom*f));
   const wx=(raw.x-pan.x)/zoom,wy=(raw.y-pan.y)/zoom;
   pan.x=raw.x-wx*nz;pan.y=raw.y-wy*nz;zoom=nz;tzoom=nz;tpan={...pan};
 },{passive:false});
 
 function zoomBy(f){
-  userMoved=true;const nz=Math.min(3,Math.max(0.35,zoom*f));
+  userMoved=true;const nz=Math.min(3,Math.max(.35,zoom*f));
   const wx=(cssW/2-pan.x)/zoom,wy=(cssH/2-pan.y)/zoom;
   pan.x=cssW/2-wx*nz;pan.y=cssH/2-wy*nz;zoom=nz;tzoom=nz;tpan={...pan};
 }
-function fitNow(){userMoved=false;autoFit=true;}
+function fitNow(){userMoved=false;autoFit=true}
 window.zoomBy=zoomBy;window.fitNow=fitNow;
 
+/* ══ info panel ══ */
 function selectNode(id){
   if(!id)return;selectedId=id;
   const p=PERSONS.find(x=>x.id===id);if(!p)return;
-  const col=SUR_COL[p.s]||'#c9c1ad';
+  const col=surColor(p.s);
   const nm=document.getElementById('info-name');
-  nm.textContent=`${p.g} ${SUR_LABEL[p.s]||p.s}`;nm.style.color=lite(col,0.2);
+  nm.textContent=`${p.g} ${surLabel(p.s)}`;nm.style.color=lite(col,.2);
   let sub='';
   if(p.b)sub+='nato/a '+p.b;
   if(p.deathYear)sub+=' · † '+p.deathYear;
@@ -580,38 +858,31 @@ function selectNode(id){
   document.getElementById('info-sub').textContent=sub;
   let body='';
   if(p.sp)body+=`<div><span class="k">Coniuge</span>${p.sp}</div>`;
-  if(p.birthPlace)body+=`<div><span class="k">Luogo nascita</span>${p.birthPlace}</div>`;
+  if(p.birthPlace)body+=`<div><span class="k">Nato a</span>${p.birthPlace}</div>`;
   if(p.emi)body+=`<div style="margin-top:9px"><span class="emi-tag">${p.emi==='USA'?'Emigrato negli USA':'Emigrato · '+p.emi}${p.emiYear?' ('+p.emiYear+')':''}</span></div>`;
-  document.getElementById('info-body').innerHTML=body||'<div style="color:#8d8068">Nessun dettaglio aggiuntivo registrato.</div>';
+  document.getElementById('info-body').innerHTML=body||'<div style="color:#7d7259">Nessun dettaglio aggiuntivo.</div>';
   const clinks=ALL_EDGES.filter(e=>e.s===id||e.t===id);
-  const seen=new Set();const rels=[];
+  const seen=new Set(),rels=[];
   clinks.forEach(e=>{
-    const oid=e.s===id?e.t:e.s;const key=`${e.type}|${oid}`;if(seen.has(key))return;seen.add(key);
+    const oid=e.s===id?e.t:e.s,key=e.type+'|'+oid;if(seen.has(key))return;seen.add(key);
     const op=PERSONS.find(x=>x.id===oid);if(!op)return;
-    const isFrom=e.s===id;let rel;
-    switch(e.type){
-      case'filiazione':rel=isFrom?'genitore di':'figlio/a di';break;
-      case'naiss_padre':rel=isFrom?'padre prob. di':'figlio/a (p.) di';break;
-      case'naiss_madre':rel=isFrom?'madre prob. di':'figlio/a (m.) di';break;
-      case'stesso':rel='stessa persona';break;
-      case'cross':rel=e.lbl||'legato a';break;
-      default:rel=e.type;
-    }
-    rels.push({rel,op,oid});
+    const isFrom=e.s===id;
+    const rel={filiazione:isFrom?'genitore di':'figlio/a di',naiss_padre:isFrom?'padre prob. di':'figlio/a (p.) di',naiss_madre:isFrom?'madre prob. di':'figlio/a (m.) di',stesso:'stessa persona',cross:e.lbl||'legato a'}[e.type]||e.type;
+    rels.push({rel,op,oid,sources:e.sources||[]});
   });
   const rc=document.getElementById('info-rels');rc.innerHTML='';
   rels.forEach(({rel,op,oid})=>{
     const pill=document.createElement('span');pill.className='rel-pill';
-    pill.innerHTML=`<span class="rk">${rel}</span>${op.g} ${SUR_LABEL[op.s]||op.s}${op.b?' ('+op.b+')':''}`;
+    pill.innerHTML=`<span class="rk">${rel}</span>${op.g} ${surLabel(op.s)}${op.b?' ('+op.b+')':''}`;
     pill.onclick=()=>selectNode(oid);rc.appendChild(pill);
   });
-  const allSrcs=clinks.flatMap(e=>e.sources||[]).filter(s=>s.reference);
-  if(allSrcs.length){
-    const srcSet=new Set();
-    const lines=allSrcs.filter(s=>{if(srcSet.has(s.reference))return false;srcSet.add(s.reference);return true;})
-      .map(s=>`<span style="color:#6d6350;font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;margin-right:5px">${s.type||'fonte'}</span>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.reference}</a>`:s.reference}`);
-    document.getElementById('info-src').innerHTML='<div style="margin-bottom:4px;font-size:10px;color:#6d6350;text-transform:uppercase;letter-spacing:1px">Fonti</div>'+lines.join('<br>');
-  }else{document.getElementById('info-src').innerHTML='';}
+  const allSrc=clinks.flatMap(e=>e.sources||[]).filter(s=>s.reference);
+  if(allSrc.length){
+    const seen2=new Set();
+    const lines=allSrc.filter(s=>{if(seen2.has(s.reference))return false;seen2.add(s.reference);return true})
+      .map(s=>`<span style="color:#5a5040;font-size:10px;text-transform:uppercase;letter-spacing:.9px;margin-right:5px">${s.type||'fonte'}</span>${s.url?`<a href="${s.url}" target="_blank" rel="noopener">${s.reference}</a>`:s.reference}`);
+    document.getElementById('info-src').innerHTML='<div style="margin-bottom:4px;font-size:10px;color:#5a5040;text-transform:uppercase;letter-spacing:1.2px">Fonti</div>'+lines.join('<br>');
+  }else document.getElementById('info-src').innerHTML='';
   document.getElementById('info').classList.add('show');
   history.replaceState(null,'',`?person=${id}`);
 }
@@ -619,15 +890,15 @@ function closeInfo(){
   selectedId=null;document.getElementById('info').classList.remove('show');
   history.replaceState(null,'',location.pathname);
 }
-window.closeInfo=closeInfo;
 function copyDeepLink(){
   navigator.clipboard?.writeText(location.href).then(()=>{
-    const btn=document.getElementById('deeplink-btn');
-    btn.textContent='✓';setTimeout(()=>btn.textContent='⌗',1500);
+    const b=document.getElementById('deeplink-btn');
+    b.textContent='✓';setTimeout(()=>b.textContent='⌗',1500);
   });
 }
-window.copyDeepLink=copyDeepLink;
+window.closeInfo=closeInfo;window.copyDeepLink=copyDeepLink;
 
+/* ══ controlli dinamici ══ */
 function setFilter(f,btn){
   activeFilter=f;
   document.querySelectorAll('.cbtn').forEach(b=>b.classList.remove('act'));
@@ -636,7 +907,7 @@ function setFilter(f,btn){
   simRunning=true;frame=0;autoFit=true;userMoved=false;
 }
 function resetSim(){
-  setFilter('all',document.getElementById('btn-all'));
+  setFilter('all',document.querySelector('#controls .cbtn'));
   PERSONS.forEach((p,i)=>{
     const a=i/PERSONS.length*Math.PI*2;
     pmap[p.id].x=Math.cos(a)*180+(Math.random()-.5)*40;
@@ -646,12 +917,75 @@ function resetSim(){
 }
 window.setFilter=setFilter;window.resetSim=resetSim;
 
+function buildControls(){
+  const counts={};
+  PERSONS.forEach(p=>counts[p.s]=(counts[p.s]||0)+1);
+  // Ordine: cognomi per numero di persone (desc), poi usa, poi separator, poi reset, poi aggiungi
+  const surnames=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  const container=document.getElementById('controls');
+  container.innerHTML='';
+
+  function mkBtn(label,filter,isActive){
+    const b=document.createElement('button');
+    b.className='cbtn'+(isActive?' act':'');
+    b.textContent=label;
+    b.setAttribute('data-filter',filter);
+    b.onclick=()=>setFilter(filter,b);
+    return b;
+  }
+
+  // tutti
+  container.appendChild(mkBtn('tutti','all',true));
+
+  // un tab per ogni cognome (con almeno 1 persona, ma mostra solo quelli con colore noto o ≥2 persone)
+  surnames.forEach(s=>{
+    if(counts[s]<1)return;
+    const b=mkBtn(surLabel(s),s,false);
+    // colora leggermente il bottone con il colore del cognome
+    const col=surColor(s);
+    b.style.setProperty('--cbtn-dot',col);
+    b.title=`${surLabel(s)} — ${counts[s]} ${counts[s]===1?'persona':'persone'}`;
+    container.appendChild(b);
+  });
+
+  // emigrati USA se presenti
+  if(PERSONS.some(p=>p.emi==='USA')){
+    container.appendChild(mkBtn('emigrati USA','usa',false));
+  }
+
+  // separatore
+  const sep=document.createElement('span');sep.className='cbtn-sep';
+  container.appendChild(sep);
+
+  // reset
+  const resetB=document.createElement('button');
+  resetB.className='cbtn';resetB.textContent='reset';resetB.onclick=resetSim;
+  container.appendChild(resetB);
+
+  // aggiungi
+  const addB=document.createElement('button');
+  addB.className='cbtn cbtn-add';addB.textContent='+ aggiungi';
+  addB.setAttribute('aria-label','Aggiungi un antenato');
+  addB.onclick=openModal;
+  container.appendChild(addB);
+}
+
+/* ══ legenda ══ */
+function buildLegend(){
+  const counts={};PERSONS.forEach(p=>counts[p.s]=(counts[p.s]||0)+1);
+  const order=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  document.getElementById('leg-fam').innerHTML=order.map(s=>
+    `<div class="lrow"><span class="ldot" style="background:${surColor(s)}"></span>${surLabel(s)} <span style="color:#6a6048;margin-left:auto">${counts[s]}</span></div>`
+  ).join('');
+}
+
+/* ══ search events ══ */
 const searchEl=document.getElementById('search');
 const clearBtn=document.getElementById('search-clear');
 searchEl.addEventListener('input',()=>{
   searchQuery=searchEl.value.trim();
   clearBtn.style.display=searchQuery?'block':'none';
-  renderSearchResults(getSearchMatches(searchQuery));
+  renderMatches(getMatches(searchQuery));
 });
 searchEl.addEventListener('keydown',e=>{
   if(e.key==='Escape'){searchEl.value='';searchQuery='';clearBtn.style.display='none';document.getElementById('search-results').style.display='none';}
@@ -664,37 +998,120 @@ document.addEventListener('click',e=>{
   if(!e.target.closest('#search-wrap'))document.getElementById('search-results').style.display='none';
 });
 
-function buildLegend(){
-  const counts={};PERSONS.forEach(p=>counts[p.s]=(counts[p.s]||0)+1);
-  const order=Object.keys(SUR_COL).filter(s=>counts[s]).sort((a,b)=>counts[b]-counts[a]);
-  document.getElementById('leg-fam').innerHTML=order.map(s=>
-    `<div class="lrow"><span class="ldot" style="background:${SUR_COL[s]}"></span>${SUR_LABEL[s]} <span style="color:#7d7259;margin-left:auto">${counts[s]}</span></div>`
-  ).join('');
+/* ══ modal contribuzione ══ */
+function openModal(){
+  // popola la select con le persone esistenti
+  const sel=document.getElementById('f-rel-person');
+  sel.innerHTML='<option value="">— nessuno / non so —</option>';
+  const sorted=[...PERSONS].sort((a,b)=>(a.g+a.s).localeCompare(b.g+b.s));
+  sorted.forEach(p=>{
+    const opt=document.createElement('option');
+    opt.value=p.id;
+    opt.textContent=`${p.g} ${surLabel(p.s)}${p.b?' ('+p.b+')':''}`;
+    sel.appendChild(opt);
+  });
+  document.getElementById('modal-overlay').classList.add('show');
+  document.getElementById('f-surname').focus();
 }
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+// chiudi cliccando fuori dal box
+document.getElementById('modal-overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('modal-overlay'))closeModal();
+});
+window.openModal=openModal;window.closeModal=closeModal;
 
+function submitContribution(){
+  const surname=document.getElementById('f-surname').value.trim();
+  const given=document.getElementById('f-given').value.trim();
+  const source=document.getElementById('f-source').value.trim();
+
+  if(!surname||!given){
+    document.getElementById('f-surname').focus();
+    document.getElementById('f-surname').style.borderColor='rgba(200,100,60,.7)';
+    setTimeout(()=>document.getElementById('f-surname').style.borderColor='',2000);
+    return;
+  }
+  if(!source){
+    document.getElementById('f-source').focus();
+    document.getElementById('f-source').style.borderColor='rgba(200,100,60,.7)';
+    setTimeout(()=>document.getElementById('f-source').style.borderColor='',2000);
+    return;
+  }
+
+  const birth=document.getElementById('f-birth').value;
+  const death=document.getElementById('f-death').value;
+  const place=document.getElementById('f-place').value.trim();
+  const spouse=document.getElementById('f-spouse').value.trim();
+  const emi=document.getElementById('f-emi').value;
+  const emiYear=document.getElementById('f-emi-year').value;
+  const notes=document.getElementById('f-notes').value.trim();
+  const relPerson=document.getElementById('f-rel-person').value;
+  const relType=document.getElementById('f-rel-type').value;
+  const srcUrl=document.getElementById('f-source-url').value.trim();
+
+  const relPersonName=relPerson?PERSONS.find(p=>p.id===relPerson)?.g+' '+surLabel(PERSONS.find(p=>p.id===relPerson)?.s||'')+' ('+relPerson+')':'—';
+
+  const title=`[Proposta] ${given} ${surname}${birth?' ('+birth+')':''}`;
+  const body=`## Proposta di aggiunta al grafo
+
+**Cognome:** ${surname}
+**Nome:** ${given}
+**Anno di nascita:** ${birth||'—'}
+**Anno di morte:** ${death||'—'}
+**Luogo di nascita:** ${place||'—'}
+**Coniuge:** ${spouse||'—'}
+**Emigrazione:** ${emi||'nessuna'}${emiYear?' ('+emiYear+')':''}
+**Note/soprannomi:** ${notes||'—'}
+
+### Collegamento a persona esistente
+**Persona:** ${relPersonName}
+**Tipo di legame:** ${relType||'—'}
+
+### Fonte
+${source}${srcUrl?'\n'+srcUrl:''}
+
+---
+*Proposta inviata tramite il modulo su [sardagna-genealogy](https://ttraveler01.github.io/sardagna-genealogy/)*`;
+
+  const url='https://github.com/ttraveler01/sardagna-genealogy/issues/new'
+    +'?title='+encodeURIComponent(title)
+    +'&body='+encodeURIComponent(body);
+
+  window.open(url,'_blank');
+  closeModal();
+}
+window.submitContribution=submitContribution;
+
+/* ══ avvio ══ */
 async function main(){
   resize();
   if(window.ResizeObserver)new ResizeObserver(()=>resize()).observe(wrap);
   window.addEventListener('resize',resize);
+
   let raw;
   try{
     const res=await fetch('data/sardagna.json');
     if(!res.ok)throw new Error('HTTP '+res.status);
     raw=await res.json();
   }catch(err){
-    document.getElementById('loading').textContent='Errore nel caricamento dati. Apri via server locale (python3 -m http.server).';
+    document.getElementById('loading').textContent='Errore caricamento dati. Aprire tramite server locale.';
     return;
   }
-  initData(raw);buildLegend();
+
+  initData(raw);
+  buildControls();  // tab dinamici — si auto-aggiornano con nuovi cognomi
+  buildLegend();
+
   const loadEl=document.getElementById('loading');
   loadEl.style.opacity='0';setTimeout(()=>loadEl.remove(),420);
+
   const deepId=new URLSearchParams(location.search).get('person');
   simRunning=true;
-  document.fonts&&document.fonts.ready.then(()=>{simRunning=true;});
+  document.fonts&&document.fonts.ready.then(()=>{simRunning=true});
   loop();
-  if(deepId&&PERSONS.find(p=>p.id===deepId)){
-    setTimeout(()=>jumpToNode(deepId),1800);
-  }
+  if(deepId&&PERSONS.find(p=>p.id===deepId))setTimeout(()=>jumpTo(deepId),1800);
 }
 main();
 </script>
