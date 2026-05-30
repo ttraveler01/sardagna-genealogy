@@ -1,5 +1,7 @@
 # Rete genealogica di Sardagna
 
+**Sito live:** https://ttraveler01.github.io/sardagna-genealogy/
+
 Un archivio visuale curato della diaspora trentino-tirolese: gli abitanti di Sardagna (Trentino) che emigrarono negli Stati Uniti tra il 1860 e il 1920, con fonti documentali e mappe interattive.
 
 ## Vision
