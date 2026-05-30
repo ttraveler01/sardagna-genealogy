@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sardagna-genealogy.github.io/schema.json",
+  "title": "Sardagna Genealogy Archive",
+  "description": "Schema for curated genealogical data of Sardagna (Trentino) emigration to the United States",
+  "type": "object",
+  "required": ["individuals", "relationships", "sources"],
+  "properties": {
+    "individuals": {
+      "type": "array",
+      "description": "List of individuals",
+      "items": {
+        "type": "object",
+        "required": ["id", "surname", "givenNames"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^P[0-9]{3,}$",
+            "description": "Unique identifier (P001, P002, etc.)"
+          },
+          "surname": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Family name (in UPPERCASE for consistency)"
+          },
+          "givenNames": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Given name(s)"
+          },
+          "birthYear": {
+            "type": ["integer", "null"],
+            "minimum": 1600,
+            "maximum": 2000,
+            "description": "Year of birth"
+          },
+          "birthPlace": {
+            "type": ["string", "null"],
+            "description": "Place of birth (e.g., Sardagna, Trento)"
+          },
+          "deathYear": {
+            "type": ["integer", "null"],
+            "minimum": 1600,
+            "maximum": 2100,
+            "description": "Year of death (null if unknown or presumed living)"
+          },
+          "spouse": {
+            "type": ["string", "null"],
+            "description": "Spouse name (if not in database as separate record)"
+          },
+          "emigration": {
+            "type": "object",
+            "properties": {
+              "destination": {
+                "type": ["string", "null"],
+                "enum": ["USA", "ARG", "BRA", "CAN", null],
+                "description": "Country of emigration"
+              },
+              "year": {
+                "type": ["integer", "null"],
+                "minimum": 1840,
+                "maximum": 1950,
+                "description": "Year of emigration"
+              }
+            }
+          },
+          "notes": {
+            "type": ["string", "null"],
+            "description": "Free-form notes (nicknames, family stories, etc.)"
+          }
+        },
+        "comment": "Cross-field checks (death>birth, privacy threshold) are enforced by validate.py"
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "description": "Relationships between individuals",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type", "sources"],
+        "properties": {
+          "from": {
+            "type": "string",
+            "pattern": "^P[0-9]{3,}$",
+            "description": "ID of source individual"
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^P[0-9]{3,}$",
+            "description": "ID of target individual"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "filial",
+              "marriage",
+              "probable_father",
+              "probable_mother",
+              "same_person"
+            ],
+            "description": "Type of relationship"
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Evidence for this relationship (at least one required)",
+            "items": {
+              "type": "object",
+              "required": ["type", "reference"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "parrocchiale",
+                    "manifesto",
+                    "civile",
+                    "censimento",
+                    "archivio",
+                    "stampa",
+                    "altro"
+                  ],
+                  "description": "Type of source document"
+                },
+                "reference": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Short reference (e.g., 'Battesimi Sardagna 1795, p. 42')"
+                },
+                "date": {
+                  "type": ["string", "null"],
+                  "format": "date",
+                  "description": "Date of source document (YYYY-MM-DD)"
+                },
+                "description": {
+                  "type": ["string", "null"],
+                  "description": "What this source says about the relationship"
+                },
+                "url": {
+                  "type": ["string", "null"],
+                  "format": "uri",
+                  "description": "Link to digitized source or archive"
+                },
+                "sourceId": {
+                  "type": ["string", "null"],
+                  "pattern": "^src_[0-9]+$",
+                  "description": "Reference to sources[] array if catalogued"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "description": "Catalog of primary sources",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^src_[0-9]+$",
+            "description": "Unique source identifier"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Title of the source"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "parrocchiale",
+              "manifesto",
+              "civile",
+              "censimento",
+              "archivio",
+              "stampa",
+              "altro"
+            ]
+          },
+          "archive": {
+            "type": ["string", "null"],
+            "description": "Archive or repository (e.g., Archivio Parrocchiale di Sardagna)"
+          },
+          "url": {
+            "type": ["string", "null"],
+            "format": "uri",
+            "description": "URL to digitized source"
+          },
+          "notes": {
+            "type": ["string", "null"],
+            "description": "Additional details about the source"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional metadata about the dataset",
+      "properties": {
+        "lastUpdated": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of last update"
+        },
+        "curator": {
+          "type": ["string", "null"],
+          "description": "Name of primary curator"
+        },
+        "license": {
+          "type": ["string", "null"],
+          "description": "License (e.g., CC BY-SA 4.0)"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

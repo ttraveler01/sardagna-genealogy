@@ -1,0 +1,39 @@
+name: Validate Data
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'schema.json'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - 'schema.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install jsonschema
+
+      - name: Validate schema
+        run: python3 scripts/validate.py
+
+      - name: Report results
+        if: always()
+        run: |
+          if [ -f validation-report.txt ]; then
+            echo "## Validation Report" >> $GITHUB_STEP_SUMMARY
+            cat validation-report.txt >> $GITHUB_STEP_SUMMARY
+          fi

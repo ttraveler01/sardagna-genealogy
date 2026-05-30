@@ -1,0 +1,27 @@
+# File privati di Claude Code — mai nel repo
+.credentials.json
+settings.json
+settings.local.json
+launch.json
+mcp-needs-auth-cache.json
+.last-cleanup
+memory/
+sessions/
+session-env/
+shell-snapshots/
+debug/
+backups/
+plugins/
+projects/
+.claude/
+
+# File temporanei
+validation-report.txt
+__pycache__/
+*.py[cod]
+.DS_Store
+.vscode/
+.idea/
+
+# La cartella viewer/ è superseded da index.html alla radice
+viewer/
